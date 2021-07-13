@@ -1,0 +1,11 @@
+textarea.form-control{
+    resize:none;
+}
+
+form{
+    transition: 0.3s;
+    &.inactive{
+        opacity: 0;
+    }
+}
+

@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PostController!
+{% endblock %}
+
+{% block body %}
+	<div class="col-md-6 mx-auto p-4 bg-light rounded mt-5">
+	<h2 class="text-center">Ajoutez des photos et des vidéos</h2>
+	<div class="row mt-3">
+		<div class="col-4 mx-auto">
+			<div class="row double-btn-selector">
+				<button class="col-6 btn btn-primary p-3" id="js-media-type-1">
+					<i class="gg-image mx-auto"></i>
+					Image
+				</button>
+				<button class="col-6 btn btn-secondary p-3" id="js-media-type-2">
+					<i class="gg-camera mx-auto"></i>
+					Video
+				</button>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="swiper-container mt-4">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide">
+				{{ form_start(imageForm, {'attr': {'class': 'active', 'id': 'js-media-form-1'}}) }}
+					{{ form_row(imageForm.imageFile) }}
+					<button class="btn btn-primary mt-2 col-12" type="submit">Publier</button>
+				{{ form_end(imageForm) }}
+			</div>
+
+			<div class="swiper-slide">
+				{{ form_start(videoForm, {'attr': {'class': 'inactive', 'id': 'js-media-form-2'}}) }}
+					{{ form_row(videoForm.url) }}
+				<button class="btn btn-primary mt-2 col-12" type="submit">Publier</button>
+				{{ form_end(videoForm) }}
+			</div>
+		</div>
+
+	</div>
+
+
+
+
+
+		
+
+
+		
+
+		
+	</div>
+
+
+    {{ encore_entry_script_tags('postMedia') }}
+
+{% endblock %}

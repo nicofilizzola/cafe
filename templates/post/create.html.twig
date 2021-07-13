@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PostController!
+{% endblock %}
+
+{% block body %}
+
+	<div class="col-md-6 mx-auto p-4 bg-light rounded mt-5">
+        <h2>Nouvelle publication</h2>
+		{{ form_start(form) }}
+		<div class="d-flex flex-column form- mt-2">
+			{{ form_label(form.title) }}
+			{{ form_errors(form.title) }}
+			{{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+			{{ form_help(form.title) }}
+		</div>
+
+		<div class="d-flex flex-column form-group mt-2">
+			{{ form_label(form.text) }}
+			{{ form_errors(form.text) }}
+			{{ form_widget(form.text, {'attr': {
+                'class': 'form-control', 
+                'rows': 10
+                }}) 
+		    }}
+			{{ form_help(form.text) }}
+		</div>
+
+		<div class="d-flex flex-column form-group mt-2">
+			{{ form_label(form.category) }}
+			{{ form_errors(form.category) }}
+			{{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
+			{{ form_help(form.category) }}
+		</div>
+
+		<div class="d-flex flex-column form-group mt-2">
+			{{ form_label(form.keywords) }}
+			{{ form_errors(form.keywords) }}
+			{{ form_widget(form.keywords, {'attr': {'class': 'form-control'}}) }}
+			{{ form_help(form.keywords) }}
+		</div>
+
+		<button class="btn btn-primary col-12 mt-4" type="submit">Suivant</button>
+		{{ form_end(form) }}
+	</div>
+
+
+{% endblock %}
