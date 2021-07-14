@@ -1,7 +1,19 @@
 import Swiper from "swiper";
-const swiper = new Swiper(".swiper-container", {
-    allowTouchMove: false
-});
+import 'swiper/swiper-bundle.css';
+
+function initSwipers() {
+  const formSwiper = new Swiper("#js-swiper-form-media-type", {
+    allowTouchMove: false,
+  });
+  if (document.querySelector("#js-swiper-post-media")) {
+  }
+  const mediaSwiper = new Swiper("#js-swiper-post-media", {
+    pagination: {
+      el: ".swiper-pagination",
+    },
+  });
+  return { form: formSwiper, media: mediaSwiper };
+}
 
 const switchClasses = (newActive, newInactive, activeClass, inactiveClass) => {
   if (!newActive.classList.contains(activeClass)) {
@@ -20,12 +32,12 @@ const ManageMediaType = () => {
     );
 
     switchClasses(pressedButton, otherButton, "btn-primary", "btn-secondary");
-    swiper.slideTo(pressedButtonIndex - 1);
+    swiper.form.slideTo(pressedButtonIndex - 1);
     switchClasses(
       document.querySelector("#js-media-form-" + pressedButtonIndex),
       document.querySelector("#js-media-form-" + otherButtonIndex),
-      'active',
-      'inactive'
+      "active",
+      "inactive"
     );
   };
 
@@ -39,6 +51,20 @@ const ManageMediaType = () => {
       buttonClickHandler(this);
     });
   });
+};
+
+const getError = () => {
+  const flashSelector = "#flash div.alert-danger";
+  const originalString = document
+    .querySelector(flashSelector)
+    .textContent.trim();
+  const error = originalString.split(" ")[0];
+
+  return {
+    flashSelector: flashSelector,
+    originalString: originalString,
+    code: error,
+  };
 };
 
 const errorController = (error) => {
@@ -58,12 +84,12 @@ const errorController = (error) => {
         "btn-primary",
         "btn-secondary"
       );
-      swiper.slideTo(1);
+      swiper.form.slideTo(1);
       switchClasses(
-        document.querySelector("#js-media-form-" + pressedButtonIndex),
-        document.querySelector("#js-media-form-" + otherButtonIndex),
-        'active',
-        'inactive'
+        document.querySelector("#js-media-form-2"),
+        document.querySelector("#js-media-form-1"),
+        "active",
+        "inactive"
       );
       break;
     default:
@@ -72,19 +98,14 @@ const errorController = (error) => {
 };
 
 const ManageErrorDisplay = () => {
-  if (document.querySelector("#flash")) {
-    const flashSelector = "#flash div.alert-danger";
-    errorController(error);
-    const originalString = document
-      .querySelector(flashSelector)
-      .textContent.trim();
-    const error = originalString.split(" ")[0];
-
-    document.querySelector(flashSelector).textContent = originalString.substr(
-      originalString.indexOf(" ") + 1
-    );
+  if (document.querySelector(".alert-danger")) {
+    const error = getError();
+    errorController(error.code);
+    document.querySelector(error.flashSelector).textContent =
+      error.originalString.substr(error.originalString.indexOf(" ") + 1);
   }
 };
 
+const swiper = initSwipers();
 ManageMediaType();
 ManageErrorDisplay();

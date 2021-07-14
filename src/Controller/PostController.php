@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\initForm;
 use App\Entity\Post;
 use App\Entity\Media;
 use App\Form\PostType;
 use App\Form\ImageMediaType;
 use App\Form\VideoMediaType;
+use App\Repository\MediaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +23,8 @@ function manageSubmission($entity, EntityManagerInterface $em){
 
 class PostController extends AbstractController
 {
+    use initForm;
+
     /**
      * @Route("/post", name="post")
      */
@@ -45,31 +49,29 @@ class PostController extends AbstractController
         }
 
         $post = new Post;
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
-        $formView = $form->createView();
+        $form = $this->initForm($request, PostType::class, $post);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form['form']->isSubmitted() && $form['form']->isValid()){
             manageKeywords($post);
             manageSubmission($post, $em);   
 
-            $this->addFlash('success', 'Added');
+            // $this->addFlash('success', 'Added');
             return $this->redirectToRoute('app_post_media', [
                 'id' => $post->getId()
             ]);
         }
 
         return $this->render('post/create.html.twig', [
-            'form' => $formView
+            'form' => $form['view']
         ]);
     }
 
     /**
      * @Route("/post/{id<\d+>}/media", name="app_post_media", methods="GET|POST")
      */
-    public function media(Post $post, Request $request, EntityManagerInterface $em): Response
+    public function media(Post $post, Request $request, EntityManagerInterface $em, MediaRepository $mediaRepository): Response
     {
-        function isFileSizeValid($media): bool 
+        function isFileSizeValid(Media $media): bool 
         {
             define("MAX_IMAGE_SIZE", 1000000);
             if($media->getImageFile()->getSize()>=MAX_IMAGE_SIZE){
@@ -78,7 +80,7 @@ class PostController extends AbstractController
                 return true;
             }
         }
-        function isFileExtValid($media): bool 
+        function isFileExtValid(Media $media): bool 
         {
             define("AVAILABLE_EXTENSIONS", [
                 "png",
@@ -94,28 +96,68 @@ class PostController extends AbstractController
                 return true;
             }
         }
-        function isUrlValid($media): bool
+        function isUrlValid(Media $media): bool
         {
-            $regexPattern = "/(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/";
+            $regexPattern = "/http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/";
+            $headers = get_headers($media->getUrl());
             $url = $media->getUrl();
-            if(!filter_var($url, FILTER_VALIDATE_URL) || !preg_match($regexPattern, $url)){
+
+            if(!filter_var($url, FILTER_VALIDATE_URL) || !preg_match($regexPattern, $url) || !strpos($headers[0], '200')){
                 return false;
             }else{
                 return true;
             }
         }
-
+        function getPostMediaData(MediaRepository $mediaRepository, Post $post): array
+        {
+            $postMedia = $mediaRepository->findBy(['post' => $post]);
+            $postMediaData = [];
+            $imgSrcPrefix = "/uploads/post/";
+            foreach ($postMedia as $media){
+                array_push($postMediaData, [
+                    "type" => $media->getType(),
+                    "src" => $media->getType() === 1 ? $imgSrcPrefix . $media->getImageName() : $media->getUrl(),
+                ]);
+            } 
+            return $postMediaData;
+        }
+        function convertToYoutubeEmbedded(Media $media): string // untested
+        {
+            function getVideoId(Media $media) {
+                function clearArguments($videoId){
+                    if (str_contains($videoId, "&")){
+                        $videoId = explode("&", $videoId)[0];
+                    }
+                    return $videoId;
+                }
+    
+                $url = $media->getUrl();
+                $components = explode("/", $url);
+                $lastComponent = $components[count($components)-1];
+    
+                if(str_contains($lastComponent, "watch?")){
+                    $videoId = explode("v=", $lastComponent)[1];  
+                } 
+                return clearArguments($videoId);
+            }
+            function generateEmbeddedLink($videoId){
+                $prefix = "https://www.youtube.com/embed/";
+                return $prefix . $videoId;
+            }
+            
+            $videoId = getVideoId($media);
+            return generateEmbeddedLink($videoId);
+        }
+   
         $media = new Media;
-        $videoForm = $this->createForm(VideoMediaType::class, $media);
-        $imageForm = $this->createForm(ImageMediaType::class, $media);
-        $videoForm->handleRequest($request);
-        $imageForm->handleRequest($request);
-        $imageFormView = $imageForm->createView();
-        $videoFormView = $videoForm->createView();
+        $imageForm = $this->initForm($request, ImageMediaType::class, $media);
+        $videoForm = $this->initForm($request, VideoMediaType::class, $media);
         $media->setPost($post);
 
-        if($imageForm->isSubmitted() && $imageForm->isValid() || $videoForm->isSubmitted() && $videoForm->isValid()){
-            if($imageForm->isSubmitted() && $imageForm->isValid()){
+        $postMedia = getPostMediaData($mediaRepository, $post);
+
+        if($imageForm['form']->isSubmitted() && $imageForm['form']->isValid() || $videoForm['form']->isSubmitted() && $videoForm['form']->isValid()){
+            if($imageForm['form']->isSubmitted() && $imageForm['form']->isValid()){
                 if(!isFileSizeValid($media)){
                     $this->addFlash('danger', 'ERROR721 Vos fichiers ne doivent pas dépasser 1 Mo.');
                     return $this->redirectToRoute('app_post_media', [
@@ -132,7 +174,7 @@ class PostController extends AbstractController
                 $media->setType(1);
             }
 
-            if($videoForm->isSubmitted() && $videoForm->isValid()){
+            if($videoForm['form']->isSubmitted() && $videoForm['form']->isValid()){
                 if(!isUrlValid($media)){
                     $this->addFlash("danger", "ERROR723 Le lien que vous avez entré est invalide.");
                     return $this->redirectToRoute('app_post_media', [
@@ -140,7 +182,9 @@ class PostController extends AbstractController
                     ]);
                 }
 
+                $media->setUrl(convertToYoutubeEmbedded($media));
                 $media->setType(2);
+                $media->setImageName('video');
             }
             
             manageSubmission($media, $em);   
@@ -152,8 +196,9 @@ class PostController extends AbstractController
         }
 
         return $this->render('post/media.html.twig', [
-            'imageForm' => $imageFormView,
-            'videoForm' => $videoFormView
+            'imageForm' => $imageForm['view'],
+            'videoForm' => $videoForm['view'],
+            'media' => $postMedia
         ]);
     }
 }
