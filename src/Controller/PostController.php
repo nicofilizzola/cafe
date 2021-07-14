@@ -149,6 +149,10 @@ class PostController extends AbstractController
             $videoId = getVideoId($media);
             return generateEmbeddedLink($videoId);
         }
+        function getMediaTypeFlashString($media): string
+        {
+            return $media->getType() == 1 ? " image " : " vidéo ";
+        }
    
         $media = new Media;
         $imageForm = $this->initForm($request, ImageMediaType::class, $media);
@@ -190,7 +194,8 @@ class PostController extends AbstractController
             
             manageSubmission($media, $em);   
 
-            $this->addFlash('success', 'Votre publication a été bien ajoutée !');
+            $mediaTypeFlashString = getMediaTypeFlashString($media);
+            $this->addFlash('success', 'Votre' . $mediaTypeFlashString . 'a été bien ajoutée !');
             return $this->redirectToRoute('app_post_media', [
                 'id' => $post->getId()
             ]);
@@ -201,11 +206,13 @@ class PostController extends AbstractController
             $em->remove($mediaToDelete);
             $em->flush();
 
-            $mediaTypeFlashString = $mediaToDelete->getType() == 1 ? " image " : " vidéo ";
+            $mediaTypeFlashString = getMediaTypeFlashString($mediaToDelete);
             $this->addFlash('success', 'Votre' . $mediaTypeFlashString . 'a été bien supprimée !');
             return $this->redirectToRoute('app_post_media', [
                 'id' => $post->getId()
             ]);
+
+            // to do : can't leave without one media
         }
 
         return $this->render('post/media.html.twig', [

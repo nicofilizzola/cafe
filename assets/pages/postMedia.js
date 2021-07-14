@@ -1,18 +1,25 @@
 import Swiper from "swiper";
-import 'swiper/swiper-bundle.css';
+import SwiperCore, { Pagination } from "swiper/core";
+SwiperCore.use([Pagination]);
+import "swiper/swiper-bundle.css";
 
 function initSwipers() {
   const formSwiper = new Swiper("#js-swiper-form-media-type", {
     allowTouchMove: false,
   });
   if (document.querySelector("#js-swiper-post-media")) {
+    const mediaSwiper = new Swiper("#js-swiper-post-media", {
+      pagination: {
+        el: ".swiper-pagination",
+      },
+      observer: true,
+      observeParents: true,
+    });
+
+    return { form: formSwiper, media: mediaSwiper };
+  } else {
+    return { form: formSwiper };
   }
-  const mediaSwiper = new Swiper("#js-swiper-post-media", {
-    pagination: {
-      el: ".swiper-pagination",
-    },
-  });
-  return { form: formSwiper, media: mediaSwiper };
 }
 
 const switchClasses = (newActive, newInactive, activeClass, inactiveClass) => {
