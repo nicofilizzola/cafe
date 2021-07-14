@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Entity\Media;
+use App\Form\ImageMediaType;
+use App\Form\VideoMediaType;
+use App\Controller\Traits\initForm;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,34 +29,9 @@ class MediaController extends AbstractController
     }
 
     /**
-     * @Route("/media/{id<\d+>}/delete", name="app_media_delete", methods={"POST"})
+     * @Route("/post/{id<\d+>}/media", name="app_post_media", methods={"GET", "POST"})
      */
-    public function delete(EntityManagerInterface $em, Request $request, Media $media): Response
-    {
-        function getMediaTypeFlashString($media): string
-        {
-            return $media->getType() == 1 ? " image " : " vidéo ";
-        }
-        if (isset($_POST['to-delete']) && ($this->isCsrfTokenValid('app_media_delete' . $media->getId(), $request->request->get('_token')))){
-            $em->remove($media);
-            $em->flush();
-
-            $mediaTypeFlashString = getMediaTypeFlashString($media);
-            $this->addFlash('success', 'Votre' . $mediaTypeFlashString . 'a été bien supprimée !');
-            return $this->redirectToRoute('app_post_media', [
-                'id' => $media->getPost()->getId()
-            ]);
-        }
-
-        return $this->redirectToRoute('app_post_media', [
-            'id' => $media->getPost()->getId()
-        ]);
-    }
-
-    /**
-     * @Route("/post/{id<\d+>}/media", name="app_media_delete", methods={"POST"})
-     */
-    public function createImg(Post $post, Request $request, EntityManagerInterface $em, MediaRepository $mediaRepository): Response
+    public function media(Post $post, Request $request, EntityManagerInterface $em, MediaRepository $mediaRepository): Response
     {
         function isFileSizeValid(Media $media): bool 
         {
@@ -133,18 +111,15 @@ class MediaController extends AbstractController
             $videoId = getVideoId($media);
             return generateEmbeddedLink($videoId);
         }
-        function getMediaTypeFlashString($media): string
-        {
-            return $media->getType() == 1 ? " image " : " vidéo ";
-        }
-   
+        require_once('Requires/getMediaTypeFlashString.php');
+
         $media = new Media;
         $imageForm = $this->initForm($request, ImageMediaType::class, $media);
         $videoForm = $this->initForm($request, VideoMediaType::class, $media);
         $media->setPost($post);
 
         $postMedia = getPostMediaData($mediaRepository, $post);
-
+        
         if($imageForm['form']->isSubmitted() && $imageForm['form']->isValid() || $videoForm['form']->isSubmitted() && $videoForm['form']->isValid()){
             if($imageForm['form']->isSubmitted() && $imageForm['form']->isValid()){
                 if(!isFileSizeValid($media)){
@@ -190,6 +165,29 @@ class MediaController extends AbstractController
             'videoForm' => $videoForm['view'],
             'media' => $postMedia,
             'postId' => $post->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/media/{id<\d+>}/delete", name="app_media_delete", methods={"POST"})
+     */
+    public function delete(EntityManagerInterface $em, Request $request, Media $media): Response
+    {
+        require_once('Requires/getMediaTypeFlashString.php');
+
+        if (isset($_POST['to-delete']) && ($this->isCsrfTokenValid('app_media_delete' . $media->getId(), $request->request->get('_token')))){
+            $em->remove($media);
+            $em->flush();
+
+            $mediaTypeFlashString = getMediaTypeFlashString($media);
+            $this->addFlash('success', 'Votre' . $mediaTypeFlashString . 'a été bien supprimée !');
+            return $this->redirectToRoute('app_post_media', [
+                'id' => $media->getPost()->getId()
+            ]);
+        }
+
+        return $this->redirectToRoute('app_post_media', [
+            'id' => $media->getPost()->getId()
         ]);
     }
 }

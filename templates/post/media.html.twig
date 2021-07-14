@@ -30,7 +30,6 @@
 						'class': 'active', 
 						'id': 'js-media-form-1'
 					},
-					'action': path('app_media_create_1')
 				}) }}
 					{{ form_row(imageForm.imageFile) }}
 					<button class="btn btn-success mt-2 mx-auto" type="submit">Ajouter</button>
@@ -43,7 +42,6 @@
 						'class': 'inactive', 
 						'id': 'js-media-form-2'
 					},
-					'action': path('app_media_create_2')
 				}) }}
 					{{ form_row(videoForm.url) }}
 				<button class="btn btn-success mt-2 mx-auto" type="submit">Ajouter</button>
@@ -83,8 +81,7 @@
 		</div>
 	{% endif %}
 
-		<form action="{{ path("app_post_media", {"id": postId}) }}" method="POST">
-		{# csrf #}
+		<form action="{{ path("app_post_save", {"id": postId}) }}" method="POST">
 			<button class="btn btn-primary col-12 mt-2" name="to-save-post" value={{ postId }}>C'est bon !</button>
 		</form>
 	</div>
