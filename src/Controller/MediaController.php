@@ -2,12 +2,8 @@
 
 namespace App\Controller;
 
-use App\Controller\Traits\initForm;
 use App\Entity\Post;
 use App\Entity\Media;
-use App\Form\PostType;
-use App\Form\ImageMediaType;
-use App\Form\VideoMediaType;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,61 +11,49 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-function manageSubmission($entity, EntityManagerInterface $em){
-    $entity->updateTimestamp();
-    $em->persist($entity);
-    $em->flush();
-}
-
-class PostController extends AbstractController
+class MediaController extends AbstractController
 {
     use initForm;
 
     /**
-     * @Route("/post", name="post")
+     * @Route("/media", name="media")
      */
     public function index(): Response
     {
-        return $this->render('post/index.html.twig', [
-            'controller_name' => 'PostController',
+        return $this->render('media/index.html.twig', [
+            'controller_name' => 'MediaController',
         ]);
     }
 
     /**
-     * @Route("/post/create", name="app_post_create", methods="GET|POST")
+     * @Route("/media/{id<\d+>}/delete", name="app_media_delete", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $em): Response
+    public function delete(EntityManagerInterface $em, Request $request, Media $media): Response
     {
-        function manageKeywords(Post $post){
-            $keywords = explode(',', $post->getKeywords()[0]);
-            for ($i=0; $i<count($keywords); $i++) {
-                $keywords[$i] = trim($keywords[$i]);
-            }
-            $post->setKeywords($keywords);
+        function getMediaTypeFlashString($media): string
+        {
+            return $media->getType() == 1 ? " image " : " vidéo ";
         }
+        if (isset($_POST['to-delete']) && ($this->isCsrfTokenValid('app_media_delete' . $media->getId(), $request->request->get('_token')))){
+            $em->remove($media);
+            $em->flush();
 
-        $post = new Post;
-        $form = $this->initForm($request, PostType::class, $post);
-
-        if ($form['form']->isSubmitted() && $form['form']->isValid()){
-            manageKeywords($post);
-            manageSubmission($post, $em);   
-
-            // $this->addFlash('success', 'Added');
+            $mediaTypeFlashString = getMediaTypeFlashString($media);
+            $this->addFlash('success', 'Votre' . $mediaTypeFlashString . 'a été bien supprimée !');
             return $this->redirectToRoute('app_post_media', [
-                'id' => $post->getId()
+                'id' => $media->getPost()->getId()
             ]);
         }
 
-        return $this->render('post/create.html.twig', [
-            'form' => $form['view']
+        return $this->redirectToRoute('app_post_media', [
+            'id' => $media->getPost()->getId()
         ]);
     }
 
     /**
-     * @Route("/post/{id<\d+>}/media", name="app_post_media", methods={"GET", "POST"})
+     * @Route("/post/{id<\d+>}/media", name="app_media_delete", methods={"POST"})
      */
-    public function media(Post $post, Request $request, EntityManagerInterface $em, MediaRepository $mediaRepository): Response
+    public function createImg(Post $post, Request $request, EntityManagerInterface $em, MediaRepository $mediaRepository): Response
     {
         function isFileSizeValid(Media $media): bool 
         {

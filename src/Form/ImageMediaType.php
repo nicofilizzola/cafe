@@ -18,7 +18,7 @@ class ImageMediaType extends AbstractType
             'allow_delete' => true,
             'delete_label' => '...',
             'image_uri' => false,
-            'imagine_pattern' => 'edit_',
+            
         ]);
     }
 

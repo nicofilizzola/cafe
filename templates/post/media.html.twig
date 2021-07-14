@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<div class="col-md-6 mx-auto p-4 bg-light rounded mt-5">
+	<div class="col-md-6 mx-auto p-4 bg-light rounded mt-3">
 	<h2 class="text-center">Ajoutez des photos et des vidéos</h2>
 	<div class="row mt-3">
 		<div class="col-4 mx-auto">
@@ -25,59 +25,68 @@
 	<div class="swiper-container mt-4" id="js-swiper-form-media-type">
 		<div class="swiper-wrapper">
 			<div class="swiper-slide">
-				{{ form_start(imageForm, {'attr': {'class': 'active', 'id': 'js-media-form-1'}}) }}
+				{{ form_start(imageForm, {
+					'attr': {
+						'class': 'active', 
+						'id': 'js-media-form-1'
+					},
+					'action': path('app_media_create_1')
+				}) }}
 					{{ form_row(imageForm.imageFile) }}
-					<button class="btn btn-primary mt-2 col-12" type="submit">Ajouter</button>
+					<button class="btn btn-success mt-2 mx-auto" type="submit">Ajouter</button>
 				{{ form_end(imageForm) }}
 			</div>
 
 			<div class="swiper-slide">
-				{{ form_start(videoForm, {'attr': {'class': 'inactive', 'id': 'js-media-form-2'}}) }}
+				{{ form_start(videoForm, {
+					'attr': {
+						'class': 'inactive', 
+						'id': 'js-media-form-2'
+					},
+					'action': path('app_media_create_2')
+				}) }}
 					{{ form_row(videoForm.url) }}
-				<button class="btn btn-primary mt-2 col-12" type="submit">Ajouter</button>
+				<button class="btn btn-success mt-2 mx-auto" type="submit">Ajouter</button>
 				{{ form_end(videoForm) }}
 			</div>
 		</div>
 	</div>
 
 	{% if media is empty == false %}
-		<form action="{{ path("app_post_media", {"id": postId}) }}" method="POST">
-			<div class="swiper-container mt-4" id="js-swiper-post-media">
-				<div class="swiper-wrapper">
-					{% for mediaItem in media %}
-						<div class="swiper-slide">
-							<button class="btn btn-delete btn-danger" name="to-delete" value="{{ mediaItem.id }}" type="submit">Supprimer</button>
+		<div class="swiper-container mt-4" id="js-swiper-post-media">
+			<div class="swiper-wrapper">
+				{% for mediaItem in media %}
+					<div class="swiper-slide py-5">
+						<form action="{{ path("app_media_delete", {"id": mediaItem.id}) }}" method="post" class="d-flex flex-center">
+							<input type="hidden" name="_method" value="DELETE" />
+							<input type="hidden" name="_token" value="{{ csrf_token('app_media_delete' ~ mediaItem.id) }}" />
+							<button class="btn btn-delete btn-danger btn-sm" name="to-delete" value="true" type="submit">Supprimer &times;</button>
 							{% if mediaItem.type == 1 %}
-								<img src="{{ asset(mediaItem.src)| imagine_filter('edit_preview')}}" alt="">
+								<img src="{{ asset(mediaItem.src)| imagine_filter('edit_preview')}}" alt="Aperçu image" class="mx-auto">
 							{% else %}
 								<iframe 
-									width="420" 
-									height="315"
+									width="200" 
+									height="200"
 									src="{{ mediaItem.src }}"
 									title="YouTube video player" 
 									frameborder="0" 
 									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-									allowfullscreen>
+									allowfullscreen
+									class="mx-auto">
 								</iframe>
 							{% endif %}
-						</div>
-					{% endfor %}
-				</div>
-				<div class="swiper-pagination"></div>
+						</form>
+					</div>
+				{% endfor %}
 			</div>
-		</form>
+			<div class="swiper-pagination"></div>
+		</div>
 	{% endif %}
 
-
-
-
-
-		
-
-
-		
-
-		
+		<form action="{{ path("app_post_media", {"id": postId}) }}" method="POST">
+		{# csrf #}
+			<button class="btn btn-primary col-12 mt-2" name="to-save-post" value={{ postId }}>C'est bon !</button>
+		</form>
 	</div>
 
 
