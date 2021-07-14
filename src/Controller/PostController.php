@@ -117,7 +117,8 @@ class PostController extends AbstractController
                 array_push($postMediaData, [
                     "type" => $media->getType(),
                     "src" => $media->getType() === 1 ? $imgSrcPrefix . $media->getImageName() : $media->getUrl(),
-                ]);
+                    "id" => $media->getId()
+                ]); 
             } 
             return $postMediaData;
         }
@@ -195,10 +196,23 @@ class PostController extends AbstractController
             ]);
         }
 
+        if (isset($_POST['to-delete'])){
+            $mediaToDelete = $mediaRepository->findOneBy(['id' => $_POST['to-delete']]);
+            $em->remove($mediaToDelete);
+            $em->flush();
+
+            $mediaTypeFlashString = $mediaToDelete->getType() == 1 ? " image " : " vidéo ";
+            $this->addFlash('success', 'Votre' . $mediaTypeFlashString . 'a été bien supprimée !');
+            return $this->redirectToRoute('app_post_media', [
+                'id' => $post->getId()
+            ]);
+        }
+
         return $this->render('post/media.html.twig', [
             'imageForm' => $imageForm['view'],
             'videoForm' => $videoForm['view'],
-            'media' => $postMedia
+            'media' => $postMedia,
+            'postId' => $post->getId()
         ]);
     }
 }
