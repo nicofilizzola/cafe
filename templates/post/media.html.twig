@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PostController!
-{% endblock %}
-
 {% block body %}
+	
 	<div class="col-md-6 mx-auto p-4 bg-light rounded mt-3">
-	<h2 class="text-center">Ajoutez des photos et des vidéos</h2>
+	<a href="{{ path('app_post_edit', {"id": postId}) }}" class="btn btn-sm btn-secondary position-absolute">&lsaquo; Retour</a>
+	<h2 class="text-center">Ajoutez des médias</h2>
 	<div class="row mt-3">
 		<div class="col-4 mx-auto">
 			<div class="row double-btn-selector">
@@ -32,7 +31,7 @@
 					},
 				}) }}
 					{{ form_row(imageForm.imageFile) }}
-					<button class="btn btn-success mt-2 mx-auto" type="submit">Ajouter</button>
+					<button class="btn btn-success mt-2 mx-auto col-12" type="submit">Ajouter</button>
 				{{ form_end(imageForm) }}
 			</div>
 
@@ -44,7 +43,8 @@
 					},
 				}) }}
 					{{ form_row(videoForm.url) }}
-				<button class="btn btn-success mt-2 mx-auto" type="submit">Ajouter</button>
+				<p class="text-muted">Pour publier une vidéo sur YouTube, vous pouvez consulter <a href="#" target="_BLANK">ce tutoriel.</a></p>
+				<button class="btn btn-success mt-2 mx-auto col-12" type="submit">Ajouter</button>
 				{{ form_end(videoForm) }}
 			</div>
 		</div>

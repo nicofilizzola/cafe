@@ -15,12 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-function manageSubmission($entity, EntityManagerInterface $em){
-    $entity->updateTimestamp();
-    $em->persist($entity);
-    $em->flush();
-}
-
 class PostController extends AbstractController
 {
     use initForm;
@@ -40,22 +34,18 @@ class PostController extends AbstractController
      */
     public function create(Request $request, EntityManagerInterface $em): Response
     {
-        function manageKeywords(Post $post){
-            $keywords = explode(',', $post->getKeywords()[0]);
-            for ($i=0; $i<count($keywords); $i++) {
-                $keywords[$i] = trim($keywords[$i]);
-            }
-            $post->setKeywords($keywords);
-        }
-
         $post = new Post;
+
+        // could be refactored with edit route
+        require_once('Requires/manageSubmission.php');
+        require_once('Requires/manageKeywords.php');
+
         $form = $this->initForm($request, PostType::class, $post);
 
         if ($form['form']->isSubmitted() && $form['form']->isValid()){
             manageKeywords($post);
             manageSubmission($post, $em);   
 
-            // $this->addFlash('success', 'Added');
             return $this->redirectToRoute('app_post_media', [
                 'id' => $post->getId()
             ]);
@@ -67,15 +57,43 @@ class PostController extends AbstractController
     }  
 
     /**
+     * @Route("/post/{id<\d+>}/edit", name="app_post_edit", methods={"GET", "POST"})
+     */
+    public function edit(Request $request, EntityManagerInterface $em, Post $post): Response
+    {
+        // could be refactored with create route
+        require_once('Requires/manageSubmission.php');
+        require_once('Requires/manageKeywords.php');
+
+        $form = $this->initForm($request, PostType::class, $post);
+
+        if ($form['form']->isSubmitted() && $form['form']->isValid()){
+            manageKeywords($post);
+            manageSubmission($post, $em);   
+
+            return $this->redirectToRoute('app_post_media', [
+                'id' => $post->getId()
+            ]);
+        }
+
+        return $this->render('post/edit.html.twig', [
+            'form' => $form['view']
+        ]);
+    }  
+
+    /**
      * @Route("/post/{id<\d+>}/save", name="app_post_save", methods={"POST"})
      */
     public function save(Post $post): Response
     {
         if (empty($post->getMedia()[0])){
-            $this->addFlash('danger', 'ERROR724 Veuillez ajouter une image ou vidéo au minimum.');
+            $this->addFlash('danger', 'ERROR724 Veuillez ajouter une image ou une vidéo au minimum.');
             return $this->redirectToRoute('app_post_media', [
                 'id' => $post->getId()
             ]); 
         }
+
+        $this->addFlash('success', 'Votre publication a été bien ajoutée !');
+        return $this->redirectToRoute('post'); 
     }
 }
