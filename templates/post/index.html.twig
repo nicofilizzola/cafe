@@ -2,18 +2,39 @@
 
 {% block body %}
     {% if posts is empty == false %}
+        {% set i = 1 %}
         {% for key, category in posts %}
-            <h3>{{ key }}</h3>
-            <ul>
-                {% for post in category %}
-                    <li>
-                        {% set src = post.media[0].type == 1 ? asset("/uploads/post/" ~ post.media[0].imageName) : asset("/images/defaultPost.jpg") %}
-                            <img src="{{ src }}" alt="{{ post.title }}">
+            <div class="col-12 {{ i % 2 == 0 ? "bg-warning" : "bg-light" }}">
+                <h3>{{ key }}</h3>
+                <ul class="posts__container">
+                    {% for row in category | batch(3) %}
+                        <div class="row mt-4 justify-content-center">
+                            {% for post in row %}
+                                <div class="col-md-3">
+                                    <li class="card">
+                                        {% set src = post.media[0].type == 1 ? asset("/uploads/post/" ~ post.media[0].imageName) : asset("/images/defaultPost.jpg") %}
+                                        <img 
+                                            src="{{ src | imagine_filter("edit_preview") }}" 
+                                            alt="{{ post.title }}" 
+                                            class="card-img-top">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ post.title }}</h5>
+                                            <a href="#" class="btn btn-primary">Voir cet article</a>
+                                        </div>
+                                    </li>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </ul>
+            </div>
 
-                        {{ post.title }}
-                    </li>
-                {% endfor %}
-            </ul>
+
+            
+
+
+
+
         {% endfor %}
     {% else %}
         <div class="col-md-6 bg-light p-5 mx-auto mt-3 rounded">

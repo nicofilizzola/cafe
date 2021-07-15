@@ -31,7 +31,7 @@ class PostController extends AbstractController
     {
         $isEmpty = true;
         $posts = [];
-        foreach ($categoryRepository->findAll() as $category){
+        foreach ($categoryRepository->findBy([], ['displayOrder' => "ASC"]) as $category){
             $posts[$category->getName()] = [];
             foreach ($category->getPosts() as $post){
                 if (!empty($post->getMedia()[0])){
@@ -46,7 +46,7 @@ class PostController extends AbstractController
                 break;
             }
         }
-        
+
         if ($isEmpty){
             $posts = [];
         } else {
