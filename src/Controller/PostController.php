@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+use function PHPUnit\Framework\isEmpty;
+
 class PostController extends AbstractController
 {
     use initForm;
@@ -37,13 +39,24 @@ class PostController extends AbstractController
                 }
             }
         }
+
         foreach ($posts as $category){
-            $isEmpty = !empty($category) ? false : true;
+            if (!empty($category)){
+                $isEmpty = false;
+                break;
+            }
         }
+        
         if ($isEmpty){
             $posts = [];
+        } else {
+            foreach ($posts as $key=>$category){
+                if (empty($category)){
+                    unset($posts[$key]);
+                }
+            }
         }
-
+        
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
         ]);

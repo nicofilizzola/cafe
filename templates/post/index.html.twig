@@ -2,13 +2,15 @@
 
 {% block body %}
     {% if posts is empty == false %}
-        {% for category in posts %}
-            <h3>{{ category.key }}</h3>
+        {% for key, category in posts %}
+            <h3>{{ key }}</h3>
             <ul>
                 {% for post in category %}
                     <li>
-                        <img src="{{ asset("/uploads/post/" ~ post.media[0].imageName) }}" alt="{{ post.title }}">
-                    {{ post.title }}
+                        {% set src = post.media[0].type == 1 ? asset("/uploads/post/" ~ post.media[0].imageName) : asset("/images/defaultPost.jpg") %}
+                            <img src="{{ src }}" alt="{{ post.title }}">
+
+                        {{ post.title }}
                     </li>
                 {% endfor %}
             </ul>
