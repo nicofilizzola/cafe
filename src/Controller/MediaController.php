@@ -119,7 +119,6 @@ class MediaController extends AbstractController
         $media->setPost($post);
 
         $postMedia = getPostMediaData($mediaRepository, $post);
-        
         if($imageForm['form']->isSubmitted() && $imageForm['form']->isValid() || $videoForm['form']->isSubmitted() && $videoForm['form']->isValid()){
             if($imageForm['form']->isSubmitted() && $imageForm['form']->isValid()){
                 if(!isFileSizeValid($media)){

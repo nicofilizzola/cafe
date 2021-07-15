@@ -27,12 +27,25 @@ class PostController extends AbstractController
      */
     public function index(PostRepository $postRepository, PostCategoryRepository $categoryRepository): Response
     {
-        $posts = $postRepository->findAll();
-        $categories = $categoryRepository->findAll();
+        $isEmpty = true;
+        $posts = [];
+        foreach ($categoryRepository->findAll() as $category){
+            $posts[$category->getName()] = [];
+            foreach ($category->getPosts() as $post){
+                if (!empty($post->getMedia()[0])){
+                    array_push($posts[$category->getName()], $post);
+                }
+            }
+        }
+        foreach ($posts as $category){
+            $isEmpty = !empty($category) ? false : true;
+        }
+        if ($isEmpty){
+            $posts = [];
+        }
 
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
-            'categories' => $categories
         ]);
     }
 

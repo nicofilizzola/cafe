@@ -2,14 +2,17 @@
 
 {% block body %}
     {% if posts is empty == false %}
-        {% for category in categories %}
-            <h3>{{ category.name }}</h3>
+        {% for category in posts %}
+            <h3>{{ category.key }}</h3>
             <ul>
-                {% for post in category.posts %}
-                    <li>{{ post.title }}</li>
+                {% for post in category %}
+                    <li>
+                        <img src="{{ asset("/uploads/post/" ~ post.media[0].imageName) }}" alt="{{ post.title }}">
+                    {{ post.title }}
+                    </li>
                 {% endfor %}
             </ul>
-        {% endfor %}        
+        {% endfor %}
     {% else %}
         <div class="col-md-6 bg-light p-5 mx-auto mt-3 rounded">
             <h2 class="text-center">Il n'y a pas encore des publications. <a href="{{ path('app_post_create') }}">Soyez le premier !</a></h2>
