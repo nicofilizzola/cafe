@@ -1,6 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+    {% if posts is empty == false %}
+        {% for category in categories %}
+            <h3>{{ category.name }}</h3>
+            <ul>
+                {% for post in category.posts %}
+                    <li>{{ post.title }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}        
+    {% else %}
+        <div class="col-md-6 bg-light p-5 mx-auto mt-3 rounded">
+            <h2 class="text-center">Il n'y a pas encore des publications. <a href="{{ path('app_post_create') }}">Soyez le premier !</a></h2>
+        </div>
+    {% endif %}
 
 {% endblock %}

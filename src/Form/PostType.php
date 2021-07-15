@@ -3,13 +3,16 @@
 namespace App\Form;
 
 use App\Entity\Post;
+use App\Entity\PostCategory;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class PostType extends AbstractType
 {
@@ -32,15 +35,10 @@ class PostType extends AbstractType
                 //     'class' => 'text-muted'
                 // ]
             ])
-            ->add('category', ChoiceType::class, [
+            ->add('postCategory', EntityType::class, [
                 'label' => 'Catégorie de votre publication',
-                'choices' => [
-                    'Educatif' => 0,
-                    'Cuisine' => 1,
-                    'Cat2' => 2,
-                    'Cat3' => 3,
-                    'Cat4' => 4,
-                ],
+                'class' => PostCategory::class,
+                'choice_label' => 'name'
                 // 'help' => 'Si vous êtes enseignant et que votre publication concerne une activité, sélectionnez l'option "Educatif"' 
             ])
             ->add('keywords', TextType::class, [

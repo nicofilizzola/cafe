@@ -31,11 +31,6 @@ class Post
     private $text;
 
     /**
-     * @ORM\Column(type="smallint")
-     */
-    private $category;
-
-    /**
      * @ORM\Column(type="array")
      */
     private $keywords = [];
@@ -44,6 +39,12 @@ class Post
      * @ORM\OneToMany(targetEntity=Media::class, mappedBy="post", orphanRemoval=true)
      */
     private $media;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=PostCategory::class, inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $PostCategory;
 
     public function __construct()
     {
@@ -92,19 +93,6 @@ class Post
 
         return $this;
     }
-
-    public function getCategory(): ?int
-    {
-        return $this->category;
-    }
-
-    public function setCategory(int $category): self
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
     public function getKeywords(): ?array
     {
         return $this->keywords;
@@ -143,6 +131,18 @@ class Post
                 $medium->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPostCategory(): ?PostCategory
+    {
+        return $this->PostCategory;
+    }
+
+    public function setPostCategory(?PostCategory $PostCategory): self
+    {
+        $this->PostCategory = $PostCategory;
 
         return $this;
     }

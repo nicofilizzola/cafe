@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Controller\Traits\initForm;
 use App\Entity\Post;
 use App\Entity\Media;
+use App\Entity\PostCategory;
 use App\Form\PostType;
 use App\Form\ImageMediaType;
 use App\Form\VideoMediaType;
 use App\Repository\MediaRepository;
+use App\Repository\PostCategoryRepository;
+use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,10 +25,14 @@ class PostController extends AbstractController
     /**
      * @Route("/post", name="post")
      */
-    public function index(): Response
+    public function index(PostRepository $postRepository, PostCategoryRepository $categoryRepository): Response
     {
+        $posts = $postRepository->findAll();
+        $categories = $categoryRepository->findAll();
+
         return $this->render('post/index.html.twig', [
-            'controller_name' => 'PostController',
+            'posts' => $posts,
+            'categories' => $categories
         ]);
     }
 
@@ -93,7 +100,7 @@ class PostController extends AbstractController
             ]); 
         }
 
-        $this->addFlash('success', 'Votre publication a été bien ajoutée !');
+        $this->addFlash('success', 'Votre publication a été bien enregistrée !');
         return $this->redirectToRoute('post'); 
     }
 }
