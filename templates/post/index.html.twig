@@ -2,10 +2,12 @@
 
 {% block body %}
     {% if posts is empty == false %}
-        {% set i = 1 %}
+        {% set i = 0 %}
         {% for key, category in posts %}
-            <div class="col-12 {{ i % 2 == 0 ? "bg-warning" : "bg-light" }}">
-                <h3>{{ key }}</h3>
+            <div class="col-12 pt-5 pb-3 {{ i % 2 == 0 ? "bg-warning" : "bg-light" }}">
+                <div class="row">
+                    <h3 class="text-center">{{ key }}</h3>
+                </div>
                 <ul class="posts__container">
                     {% for row in category | batch(3) %}
                         <div class="row mt-4 justify-content-center">
@@ -14,7 +16,7 @@
                                     <li class="card">
                                         {% set src = post.media[0].type == 1 ? asset("/uploads/post/" ~ post.media[0].imageName) : asset("/images/defaultPost.jpg") %}
                                         <img 
-                                            src="{{ src | imagine_filter("edit_preview") }}" 
+                                            src="{{ src | imagine_filter("card_preview") }}" 
                                             alt="{{ post.title }}" 
                                             class="card-img-top">
                                         <div class="card-body">
@@ -26,15 +28,10 @@
                             {% endfor %}
                         </div>
                     {% endfor %}
+                    {{ knp_pagination_render(category) }}
                 </ul>
             </div>
-
-
-            
-
-
-
-
+            {% set i = i + 1 %}
         {% endfor %}
     {% else %}
         <div class="col-md-6 bg-light p-5 mx-auto mt-3 rounded">
