@@ -25,7 +25,7 @@ class PostController extends AbstractController
     use initForm;
 
     /**
-     * @Route("/post", name="post")
+     * @Route("/post", name="app_post")
      */
     public function index(PostCategoryRepository $categoryRepository, PaginatorInterface $paginator, Request $request): Response
     {
@@ -36,6 +36,9 @@ class PostController extends AbstractController
             foreach ($category->getPosts() as $post){
                 if (!empty($post->getMedia()[0])){
                     array_push($posts[$category->getName()], $post);
+                    if (count($posts[$category->getName()]) == 3){
+                        break;
+                    }
                 }
             }
         }
@@ -55,15 +58,7 @@ class PostController extends AbstractController
                     unset($posts[$key]);
                 }
             }
-        }
-
-        foreach ($posts as $key=>$category){
-            $posts[$key] = $paginator->paginate(
-                $category, /* query NOT result */
-                $request->query->getInt('page', 1)/*page number*/,
-                3/*limit per page*/
-            );
-        }        
+        }      
         
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
@@ -135,6 +130,17 @@ class PostController extends AbstractController
         }
 
         $this->addFlash('success', 'Votre publication a été bien enregistrée !');
-        return $this->redirectToRoute('post'); 
+        return $this->redirectToRoute('app_post'); 
+    }
+
+    /**
+     * @Route("/post/{id<\d+>}", name="app_post_view", methods={"GET"})
+     */
+    public function view(Post $post): Response
+    {
+
+        return $this->render('post/view.html.twig', [
+            'post' => $post
+        ]);
     }
 }

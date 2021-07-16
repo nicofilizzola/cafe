@@ -6,13 +6,13 @@
         {% for key, category in posts %}
             <div class="col-12 pt-5 pb-3 {{ i % 2 == 0 ? "bg-warning" : "bg-light" }}">
                 <div class="row">
-                    <h3 class="text-center">{{ key }}</h3>
+                    <h3 class="text-center">{{ key }} : Dernières publications</h3>
                 </div>
                 <ul class="posts__container">
                     {% for row in category | batch(3) %}
-                        <div class="row mt-4 justify-content-center">
+                        <div class="row justify-content-center">
                             {% for post in row %}
-                                <div class="col-md-3">
+                                <div class="col-9 col-md-3 mt-4">
                                     <li class="card">
                                         {% set src = post.media[0].type == 1 ? asset("/uploads/post/" ~ post.media[0].imageName) : asset("/images/defaultPost.jpg") %}
                                         <img 
@@ -21,14 +21,16 @@
                                             class="card-img-top">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ post.title }}</h5>
-                                            <a href="#" class="btn btn-primary">Voir cet article</a>
+                                            <a href="{{ path("app_post_view", {"id": post.id}) }}" class="btn btn-primary">Voir cet article</a>
                                         </div>
                                     </li>
                                 </div>
                             {% endfor %}
                         </div>
                     {% endfor %}
-                    {{ knp_pagination_render(category) }}
+                    <div class="row justify-content-center">
+                        <button class="btn btn-primary col-9 mt-4">Voir plus</button>
+                    </div>
                 </ul>
             </div>
             {% set i = i + 1 %}

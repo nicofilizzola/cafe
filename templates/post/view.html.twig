@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6 bg-light rounded">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {% for mediaItem in post.media %}
+                        <div class="swiper-slide">
+                            {% if mediaItem.type == 1 %}
+								<img src="{{ asset("uploads/post/" ~ mediaItem.imageName)| imagine_filter('edit_preview')}}" alt="Aperçu image" class="mx-auto">
+							{% else %}
+								<iframe 
+									width="200" 
+									height="200"
+									src="{{ mediaItem.url }}"
+									title="YouTube video player" 
+									frameborder="0" 
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+									allowfullscreen
+									class="mx-auto">
+								</iframe>
+							{% endif %}
+                            <p>{{ mediaItem.id }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
+
+        <div class="col-md-6 bg-light rounded">
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.text }}</p>
+
+            <a href="{{ path("app_post_edit", {"id": post.id}) }}">Modifier</a>
+        </div>
+    </div>
+
+    {{ encore_entry_script_tags('post_edit') }}
+{% endblock %}
