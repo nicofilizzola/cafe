@@ -3,6 +3,10 @@
 //   height: 300px;
 // }
 
-.swiper-button-prev:after, .swiper-container-rtl .swiper-button-next:after, .swiper-button-next:after, .swiper-container-rtl .swiper-button-prev:after {
-  text-rendering: auto;
+// .swiper-button-prev:after, .swiper-container-rtl .swiper-button-next:after, .swiper-button-next:after, .swiper-container-rtl .swiper-button-prev:after {
+//   text-rendering: auto;
+// }
+
+html:root{
+  --swiper-theme-color: #fff;
 }

@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}    
-    {# <div class="container-fluid"> #}
     {% if posts is empty == false %}
         {% set i = 0 %}
         {% for key, category in posts %}
-            <div class="col-12 pt-4 pt-sm-5 pb-3 vh-full {{ i % 2 == 0 ? "bg-warning" : "bg-light" }}">
-                <div class="row">
-                    <h3 class="text-center">{{ key }} : Dernières publications</h3>
-                </div>
+            <div class="container-fluid position-relative px-0 pt-sm-5 pb-0 pb-sm-3 mb-0 vw-100 {{ i % 2 == 0 ? "bg-warning" : "bg-light" }}">
                 {# desktop #}
+                <div class="row d-none d-sm-block">
+                    <h3 class="text-center">{{ key }}</h3>
+                </div>
                 <ul class="posts__container d-none d-sm-block">
                     {% for row in category | batch(3) %}
                         <div class="row justify-content-center">
@@ -30,36 +29,42 @@
                             {% endfor %}
                         </div>
                     {% endfor %}
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center d-block d-sm-none">
                         <button class="btn btn-primary col-9 mt-4">Voir plus</button>
                     </div>
                 </ul>
                 {# mobile #}
-                <ul class="posts__container d-sm-none mt-4">
-                    <div class="swiper-container">
-                        <div class="swiper-wrapper">
-                            {% for post in category %}
-                                <div class="swiper-slide">
-                                    <li class="card">
-                                        {% set src = post.media[0].type == 1 ? asset("/uploads/post/" ~ post.media[0].imageName) : asset("/images/defaultPost.jpg") %}
-                                        <img 
-                                            src="{{ src | imagine_filter("card_preview") }}" 
-                                            alt="{{ post.title }}" 
-                                            class="card-img-top">
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ post.title }}</h5>
-                                            <a href="{{ path("app_post_view", {"id": post.id}) }}" class="btn btn-primary">Voir cet article</a>
-                                        </div>
-                                    </li>
+                <div class="row">
+                    <h3 class="text-center pt-4 d-sm-none">{{ key }}</h3>
+                </div>
+                <div class="row position-absolute bottom-0 mx-0">
+                    <ul class="posts__container col-12 d-sm-none mb-0 px-0">
+                        <div class="swiper-container vw-100">
+                            <div class="swiper-wrapper">
+                                {% for post in category %}
+                                    <div class="swiper-slide">
+                                        <li class="card">
+                                            {% set src = post.media[0].type == 1 ? asset("/uploads/post/" ~ post.media[0].imageName) : asset("/images/defaultPost.jpg") %}
+                                            <img 
+                                                src="{{ src | imagine_filter("card_preview") }}" 
+                                                alt="{{ post.title }}" 
+                                                class="card-img-top">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ post.title }}</h5>
+                                                <a href="{{ path("app_post_view", {"id": post.id}) }}" class="btn btn-primary">Voir cet article</a>
+                                            </div>
+                                        </li>
+                                    </div>
+                                {% endfor %}
+                                <div class="swiper-slide d-flex justify-content-center align-items-center h-auto bg-primary">
+                                    <h3 class="text-light">Voir plus</h3>
                                 </div>
-                            {% endfor %}
-                            <div class="swiper-slide">
-                                <button class="btn btn-primary w-100 h-100 d-inline-block">Voir plus</button>
                             </div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
                         </div>
-                        <div class="swiper-pagination position-relative mt-3"></div>
-                    </div>
-                </ul>
+                    </ul>
+                </div> 
             </div>
             {% set i = i + 1 %}
         {% endfor %}
@@ -68,6 +73,5 @@
             <h2 class="text-center">Il n'y a pas encore des publications. <a href="{{ path('app_post_create') }}">Soyez le premier !</a></h2>
         </div>
     {% endif %}
-    {# </div> #}
     {{ encore_entry_script_tags('app_post') }}
 {% endblock %}
