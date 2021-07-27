@@ -25,7 +25,7 @@ class PostController extends AbstractController
     use initForm;
 
     /**
-     * @Route("/post", name="app_post")
+     * @Route("/post", name="app_post", methods={"GET"})
      */
     public function index(PostCategoryRepository $categoryRepository, PaginatorInterface $paginator, Request $request): Response
     {
@@ -140,7 +140,7 @@ class PostController extends AbstractController
     {
 
         return $this->render('post/view.html.twig', [
-            'post' => $post
+            'post' => $post,
         ]);
     }
 }

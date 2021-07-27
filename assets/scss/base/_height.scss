@@ -1,0 +1,6 @@
+.vh-full {
+  height: 100vh;
+  @media screen and (max-width: map-get($grid-breakpoints, "sm")) {
+    height: calc(100vh - #{$navHeight});
+  }
+}

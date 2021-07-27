@@ -1,7 +1,13 @@
 @import "~bootstrap/scss/bootstrap";
 @import '~swiper/swiper-bundle';
 
+@import "./utils/variables";
+
+@import './base/setup';
+@import './base/height';
+
 @import "./layout/form";
+@import "./layout/nav";
 
 @import "./components/button";
 @import "./components/icons";
@@ -9,6 +15,7 @@
 @import "./components/card";
 @import "./components/pagination";
 // @import "./components/swiper";
+
 
 
 

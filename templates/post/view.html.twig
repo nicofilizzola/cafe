@@ -35,10 +35,10 @@
         <div class="col-md-6 bg-light rounded">
             <h1>{{ post.title }}</h1>
             <p>{{ post.text }}</p>
-
-            <a href="{{ path("app_post_edit", {"id": post.id}) }}">Modifier</a>
+            <a class="btn btn-success" href="{{ path("app_post_edit", {"id": post.id}) }}">Modifier</a>
+            {# <a class="btn btn-danger" href="{{ path("app_post_delete", {"id": post.id}) }}">Supprimer</a> #}
         </div>
     </div>
 
-    {{ encore_entry_script_tags('post_edit') }}
+    {{ encore_entry_script_tags('app_post_view') }}
 {% endblock %}
