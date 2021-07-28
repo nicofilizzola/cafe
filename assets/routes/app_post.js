@@ -13,8 +13,8 @@ const swiper = new Swiper(".swiper-container", {
 });
 
 const manageContainerHeightMobile = () => {
-  if (document.querySelector(".container-fluid.mobile")){
-    document.querySelectorAll(".container-fluid.mobile").forEach((container) => {
+  if (document.querySelector(".container-fluid.mobile:not(footer)")){
+    document.querySelectorAll(".container-fluid.mobile:not(footer)").forEach((container) => {
       container.style.height = "calc(" + window.innerHeight + "px - " + "70px)";
     });
   }

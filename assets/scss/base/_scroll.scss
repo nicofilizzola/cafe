@@ -1,8 +1,0 @@
-@media screen and (max-height: map-get($grid-breakpoints, "sm")) {
-  body {
-    scroll-snap-type: y mandatory;
-    .container-fluid.mobile{
-        scroll-snap-align: start;
-    }
-  }
-}

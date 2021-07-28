@@ -141,7 +141,9 @@ class PostController extends AbstractController
         }
 
         $this->addFlash('success', 'Votre publication a été bien enregistrée !');
-        return $this->redirectToRoute('app_post'); 
+        return $this->redirectToRoute('app_post', [
+            'isMobile' => $this->detect->isMobile() ? true : false
+        ]); 
     }
 
     /**
@@ -149,9 +151,9 @@ class PostController extends AbstractController
      */
     public function view(Post $post): Response
     {
-
         return $this->render('post/view.html.twig', [
             'post' => $post,
+            'isMobile' => $this->detect->isMobile() ? true : false
         ]);
     }
 }
