@@ -2,3 +2,12 @@ nav.mobile{
     height: $navHeight;
     -webkit-backface-visibility: hidden;
 }
+
+.fixed-on-nav {
+    bottom: calc(#{$navHeight} + 1rem);
+    z-index: 1029;
+    &.center{
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}

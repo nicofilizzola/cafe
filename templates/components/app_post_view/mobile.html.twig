@@ -8,13 +8,13 @@
             {# <a class="btn btn-danger" href="{{ path("app_post_delete", {"id": post.id}) }}">Supprimer</a> #}
         </div>
     </div>
-    <div class="col-12 mobile bg-danger py-sm-4 d-flex justify-content-center align-items-center">
-        <div class="swiper-container">
+    <div class="col-12 mobile bg-danger py-sm-4 d-flex justify-content-center align-items-center" id="media">
+        <div class="swiper-container vw-100">
             <div class="swiper-wrapper">
                 {% for mediaItem in post.media %}
                     <div class="swiper-slide d-flex justify-content-center align-items-center">
                         {% if mediaItem.type == 1 %}
-                            <img src="{{ asset("uploads/post/" ~ mediaItem.imageName)| imagine_filter('square_md')}}" alt="Aperçu image" class="mx-auto">
+                            <img src="{{ asset("uploads/post/" ~ mediaItem.imageName)| imagine_filter('square_md')}}" alt="Aperçu image" class="mx-auto col-9">
                         {% else %}
                             <iframe 
                                 width="400" 
@@ -37,3 +37,6 @@
         </div>
     </div>
 </div>
+<a href="#media" class="position-fixed fixed-on-nav center" id="navigate-button">
+    <button class="btn btn-secondary appear-from-bottom">Sauter aux médias</button>
+</a>

@@ -6,7 +6,6 @@ import "swiper/swiper-bundle.css";
 const swiper = new Swiper(".swiper-container", {
   observer: true,
   observeParents: true,
-  loop: true,
   pagination: {
     el: ".swiper-pagination",
   },
@@ -20,7 +19,7 @@ import manageContainerHeightMobile from "../functions/manageContainerHeightMobil
 
 const manageContainerHeight = () => {
   const container = document.querySelector(".container-fluid.adapt-height");
-  if (container) {
+  if (container != null) {
     container.style.height =
       "calc(100vh - " + document.querySelector("header").clientHeight + "px)";
   }

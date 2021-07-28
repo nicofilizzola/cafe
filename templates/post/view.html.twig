@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container-fluid adapt-height bg-light">
+    <div class="container-fluid bg-light {{ isMobile ? "" : "adapt-height" }}">
         {% if isMobile %}
             {% include "components/app_post_view/mobile.html.twig" %}
         {% else %}
