@@ -4,7 +4,8 @@
 @import "./utils/variables";
 
 @import './base/setup';
-@import './base/height';
+@import './base/dimensions';
+@import './base/scroll';
 
 @import "./layout/form";
 @import "./layout/nav";

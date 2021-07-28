@@ -4,7 +4,10 @@
     {% if posts is empty == false %}
         {% set i = 0 %}
         {% for key, category in posts %}
-            <div class="container-fluid position-relative px-0 pt-sm-5 pb-0 pb-sm-3 mb-0 vw-100 {{ i % 2 == 0 ? "bg-warning" : "bg-light" }}">
+            <div 
+                class="container-fluid position-relative px-0 pb-0 mb-0 vw-100  
+                {{ isMobile ? "mobile d-flex flex-column align-items-center justify-content-center" : "min-vh-sm-100 d-sm-block pt-sm-5 pb-sm-3" }} 
+                {{ i % 2 == 0 ? "bg-warning" : "bg-light" }}">
                 {% if isMobile %}
                     {% include "components/postRow/_mobile.html.twig" %}
                 {% else %}

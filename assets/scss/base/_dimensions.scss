@@ -1,0 +1,5 @@
+.min-vh-sm-100{
+  @media screen and (min-width: map-get($grid-breakpoints, "sm")) {
+    min-height: 100vh;
+  }
+}
