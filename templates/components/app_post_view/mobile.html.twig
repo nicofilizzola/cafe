@@ -1,0 +1,39 @@
+<div class="row justify-content-center">
+    <div class="col-12 mobile no-resize bg-warning d-flex justify-content-center align-items-center flex-column p-4">
+        <div>
+            <h1>{{ post.title }} sdfheeyjhfdrjtdqrzd</h1>
+            <p class="overflow-auto mt-3">{{ post.text }} "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?" "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"</p>
+            <a class="btn btn-success" href="{{ path("app_post_edit", {"id": post.id}) }}">Modifier</a>
+            <a class="btn btn-danger" href="#">Supprimer</a>
+            {# <a class="btn btn-danger" href="{{ path("app_post_delete", {"id": post.id}) }}">Supprimer</a> #}
+        </div>
+    </div>
+    <div class="col-12 mobile bg-danger py-sm-4 d-flex justify-content-center align-items-center">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                {% for mediaItem in post.media %}
+                    <div class="swiper-slide d-flex justify-content-center align-items-center">
+                        {% if mediaItem.type == 1 %}
+                            <img src="{{ asset("uploads/post/" ~ mediaItem.imageName)| imagine_filter('square_md')}}" alt="Aperçu image" class="mx-auto">
+                        {% else %}
+                            <iframe 
+                                width="400" 
+                                height="400"
+                                src="{{ mediaItem.url }}"
+                                title="YouTube video player" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen
+                                class="mx-auto">
+                            </iframe>
+                        {% endif %}
+                        {# <p>{{ mediaItem.id }}</p> #}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination position-relative mt-4"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+    </div>
+</div>

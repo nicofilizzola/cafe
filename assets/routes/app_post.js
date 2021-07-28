@@ -12,18 +12,12 @@ const swiper = new Swiper(".swiper-container", {
   observeParents: true,
 });
 
-const manageContainerHeightMobile = () => {
-  if (document.querySelector(".container-fluid.mobile:not(footer)")){
-    document.querySelectorAll(".container-fluid.mobile:not(footer)").forEach((container) => {
-      container.style.height = "calc(" + window.innerHeight + "px - " + "70px)";
-    });
-  }
-};
+import manageContainerHeightMobile from "../functions/manageContainerHeightMobile";
 const manageSeeMoreButtonsHeightMobile = () => {
   document.querySelectorAll(".see-more").forEach((seeMoreDiv) => {
     seeMoreDiv.style.height = document.querySelector(".card").clientHeight + "px";
   });
 };
 
-manageContainerHeightMobile();
+manageContainerHeightMobile(".container-fluid.mobile:not(footer)");
 manageSeeMoreButtonsHeightMobile();

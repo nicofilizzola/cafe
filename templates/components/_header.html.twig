@@ -1,22 +1,24 @@
-{# desktop #}
-<header class="d-none d-sm-flex justify-content-between bg-dark px-5 py-4">
-    <a href="#">Logo</a>
-    <nav>
-        <a href="">Accueil</a>
-        <a href="{{ path("app_post") }}">Espace membre</a>
-        <a href="{{ path("app_post_create") }}">Nouvelle publication</a>
-        <a href="">Mon profil</a>
+
+{% if isMobile %}
+    <nav class="mobile d-flex d-sm-none fixed-bottom justify-content-around align-items-center bg-light shadow-lg">
+        <a href="{{ path("app_post_create") }}">
+            <i class="gg-pen"></i>
+        </a>
+        <a href="{{ path("app_post") }}">
+            <i class="gg-home"></i>
+        </a>
+        <a href="{{ path("app_post_create") }}">
+            <i class="gg-user"></i>
+        </a>
     </nav>
-</header>
-{# mobile #}
-<nav class="mobile d-flex d-sm-none fixed-bottom justify-content-around align-items-center bg-light shadow-lg">
-    <a href="{{ path("app_post_create") }}">
-        <i class="gg-pen"></i>
-    </a>
-    <a href="{{ path("app_post") }}">
-        <i class="gg-home"></i>
-    </a>
-    <a href="{{ path("app_post_create") }}">
-        <i class="gg-user"></i>
-    </a>
-</nav>
+{% else %}
+    <header class="d-none d-sm-flex justify-content-between bg-dark px-5 py-4">
+        <a href="#">Logo</a>
+        <nav>
+            <a href="">Accueil</a>
+            <a href="{{ path("app_post") }}">Espace membre</a>
+            <a href="{{ path("app_post_create") }}">Nouvelle publication</a>
+            <a href="">Mon profil</a>
+        </nav>
+    </header>
+{% endif %}

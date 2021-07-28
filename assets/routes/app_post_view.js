@@ -16,6 +16,8 @@ const swiper = new Swiper(".swiper-container", {
   },
 });
 
+import manageContainerHeightMobile from "../functions/manageContainerHeightMobile";
+
 const manageContainerHeight = () => {
   const container = document.querySelector(".container-fluid.adapt-height");
   if (container) {
@@ -24,4 +26,5 @@ const manageContainerHeight = () => {
   }
 };
 
+manageContainerHeightMobile('.col-12.mobile:not(.no-resize)');
 manageContainerHeight();
