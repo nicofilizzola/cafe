@@ -14,9 +14,9 @@ use App\Repository\MediaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PostCategoryRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Mobile_Detect;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -27,7 +27,7 @@ class PostController extends AbstractController
     /**
      * @Route("/post", name="app_post", methods={"GET"})
      */
-    public function index(PostCategoryRepository $categoryRepository, PaginatorInterface $paginator, Request $request): Response
+    public function index(PostCategoryRepository $categoryRepository): Response
     {
         $isEmpty = true;
         $posts = [];
@@ -58,10 +58,14 @@ class PostController extends AbstractController
                     unset($posts[$key]);
                 }
             }
-        }      
+        }   
+
+        require_once("Requires/Mobile_Detect.php");
+        $detect = new Mobile_Detect();
         
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
+            'isMobile' => $detect->isMobile() ? true : false
         ]);
     }
 

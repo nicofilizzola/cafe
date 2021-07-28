@@ -1,0 +1,27 @@
+<div class="row d-none d-sm-block">
+    <h3 class="text-center">{{ key }}</h3>
+</div>
+<ul class="posts__container d-none d-sm-block">
+    {% for row in category | batch(3) %}
+        <div class="row justify-content-center">
+            {% for post in row %}
+                <div class="col-9 col-md-3 mt-4">
+                    <li class="card">
+                        {% set src = post.media[0].type == 1 ? asset("/uploads/post/" ~ post.media[0].imageName) : asset("/images/defaultPost.jpg") %}
+                        <img 
+                            src="{{ src | imagine_filter("card_preview") }}" 
+                            alt="{{ post.title }}" 
+                            class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <a href="{{ path("app_post_view", {"id": post.id}) }}" class="btn btn-primary">Voir cet article</a>
+                        </div>
+                    </li>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <div class="row justify-content-center d-block d-sm-none">
+        <button class="btn btn-primary col-9 mt-4">Voir plus</button>
+    </div>
+</ul>
