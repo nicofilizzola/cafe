@@ -123,7 +123,8 @@ class PostController extends AbstractController
         }
 
         return $this->render('post/edit.html.twig', [
-            'form' => $form['view']
+            'form' => $form['view'],
+            'isMobile' => $this->detect->isMobile() ? true : false
         ]);
     }  
 

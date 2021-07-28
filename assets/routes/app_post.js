@@ -13,9 +13,11 @@ const swiper = new Swiper(".swiper-container", {
 });
 
 const manageContainerHeightMobile = () => {
-  document.querySelectorAll(".container-fluid").forEach((container) => {
-    container.style.height = "calc(" + window.innerHeight + "px - " + "70px)";
-  });
+  if (document.querySelector(".container-fluid.mobile")){
+    document.querySelectorAll(".container-fluid.mobile").forEach((container) => {
+      container.style.height = "calc(" + window.innerHeight + "px - " + "70px)";
+    });
+  }
 };
 const manageSeeMoreButtonsHeightMobile = () => {
   document.querySelectorAll(".see-more").forEach((seeMoreDiv) => {
