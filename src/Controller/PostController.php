@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Mobile_Detect;
 use App\Entity\Post;
 use App\Entity\Media;
 use App\Form\PostType;
@@ -14,7 +15,6 @@ use App\Repository\MediaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PostCategoryRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Mobile_Detect;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +23,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PostController extends AbstractController
 {
     use initForm;
+
+    private $detect;
+
+    public function __construct()
+    {
+        require_once("Requires/Mobile_Detect.php");
+        $this->detect = new Mobile_Detect();
+    }
 
     /**
      * @Route("/post", name="app_post", methods={"GET"})
@@ -59,13 +67,10 @@ class PostController extends AbstractController
                 }
             }
         }   
-
-        require_once("Requires/Mobile_Detect.php");
-        $detect = new Mobile_Detect();
         
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
-            'isMobile' => $detect->isMobile() ? true : false
+            'isMobile' => $this->detect->isMobile() ? true : false
         ]);
     }
 
@@ -92,7 +97,8 @@ class PostController extends AbstractController
         }
 
         return $this->render('post/create.html.twig', [
-            'form' => $form['view']
+            'form' => $form['view'],
+            'isMobile' => $this->detect->isMobile() ? true : false
         ]);
     }  
 
