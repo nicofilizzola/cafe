@@ -9,7 +9,7 @@
                     <li class="card">
                         {% set src = post.media[0].type == 1 ? asset("/uploads/post/" ~ post.media[0].imageName) : asset("/images/defaultPost.jpg") %}
                         <img 
-                            src="{{ src | imagine_filter("card_preview") }}" 
+                            src="{{ src | imagine_filter("square_xl") }}" 
                             alt="{{ post.title }}" 
                             class="card-img-top">
                         <div class="card-body">

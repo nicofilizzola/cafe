@@ -8,10 +8,20 @@ const swiper = new Swiper(".swiper-container", {
   observeParents: true,
   loop: true,
   pagination: {
-    el: '.swiper-pagination',
+    el: ".swiper-pagination",
   },
   navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
   },
 });
+
+const manageContainerHeight = () => {
+  const container = document.querySelector(".container-fluid.adapt-height");
+  if (container) {
+    container.style.height =
+      "calc(100vh - " + document.querySelector("header").clientHeight + "px)";
+  }
+};
+
+manageContainerHeight();
