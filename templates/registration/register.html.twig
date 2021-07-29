@@ -7,15 +7,48 @@
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <div class="container-fluid bg-light">
+        <div class="row">
+            <div class="col-sm-6 mx-auto bg-white p-5 rounded my-sm-5 shadow">
+                <h1>Devenir adérent</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                {{ form_start(registrationForm, {attr: {'novalidate': true}}) }}
+                    <div class="row">
+                        <div class="col-6">
+                            {{ form_row(registrationForm.firstName, {
+                                label: "Prénom"
+                            }) }}
+                        </div>
+                        <div class="col-6">
+                            {{ form_row(registrationForm.lastName, {
+                                label: "Nom"
+                            }) }}
+                        </div>
+                    </div>
+                    
+                    {{ form_row(registrationForm.email, {
+                        label: "Adresse email"
+                    }) }}
+                    {{ form_row(registrationForm.birthDate, {
+                        label: "Date de naissance"
+                    }) }}
+                    {{ form_row(registrationForm.address, {
+                        label: "Adresse postale"
+                    }) }}
+                    {{ form_row(registrationForm.phoneNumber, {
+                        label: "Numéro de téléphone"
+                    }) }}
+                    {{ form_row(registrationForm.plainPassword) }}
+                    {# view args in controller #}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                    {{ form_row(registrationForm.agreeTerms, {
+                        label: "J'accepte les conditions d'utilisation"
+                    }) }}
+
+                    <button type="submit" class="btn btn-primary">Register</button>
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
