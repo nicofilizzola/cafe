@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class RegistrationFormType extends AbstractType
 {
@@ -48,7 +49,11 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('birthDate', null, [
                 'years' => range(intval(date("Y", strtotime("-70 year"))), intval(date("Y", strtotime("-12 year")))),
+                // 'widget' => 'single_text',
                 'constraints' => [
+                    new NotNull([
+                        'message' => "Ce champs ne peut pas être vide."
+                    ]),
                     new LessThanOrEqual([
                         'value' => new DateTime('now -12 year'),
                         'message' => "Vous devez au moins avoir 12 ans pour faire une demande d'adhésion."

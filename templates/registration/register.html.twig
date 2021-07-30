@@ -9,10 +9,13 @@
 
     <div class="container-fluid bg-light">
         <div class="row">
-            <div class="col-sm-6 mx-auto bg-white p-5 rounded my-sm-5 shadow">
+            <div class="col-sm-6 mx-auto bg-white p-5 rounded my-sm-5 shadow min-vh-100">
                 <h1>Devenir adérent</h1>
 
-                {{ form_start(registrationForm, {attr: {'novalidate': true}}) }}
+                {{ form_start(registrationForm, {attr: {
+                    'novalidate': true,
+                    'id': 'registration-form'
+                }}) }}
                     <div class="row">
                         <div class="col-6">
                             {{ form_row(registrationForm.firstName, {
@@ -40,15 +43,33 @@
                     }) }}
                     {{ form_row(registrationForm.plainPassword) }}
                     {# view args in controller #}
-
                     {{ form_row(registrationForm.agreeTerms, {
                         label: "J'accepte les conditions d'utilisation"
                     }) }}
 
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary col-12" id="registration-form-button" data-bs-toggle="modal" data-bs-target="#modal">Envoyer</button>
                 {{ form_end(registrationForm) }}
             </div>
         </div>
     </div>
 
+    <div class="modal" tabindex="-1" id="modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Attention</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Votre adhésion ne sera validé qu'après avoir versé le montant correspondant à votre situation.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retour</button>
+                    <button type="button" class="btn btn-primary">C'est compris</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ encore_entry_script_tags('app_register') }}
 {% endblock %}

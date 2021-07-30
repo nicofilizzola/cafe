@@ -24,6 +24,7 @@ Encore
     .addEntry('app_post', './assets/routes/app_post.js')
     .addEntry('app_post_media', './assets/routes/app_post_media.js')
     .addEntry('app_post_view', './assets/routes/app_post_view.js')
+    .addEntry('app_register', './assets/routes/app_register.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
